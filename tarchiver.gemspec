@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["bart@kamphorst.com"]
   spec.summary       = %q{A high-level tar and tgz archiver.}
   spec.description   = %q{A high-level tar and tgz archiver.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/bartkamphorst/tarchiver"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
