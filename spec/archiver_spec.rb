@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Tarchiver::Archiver do
   
-  before(:all) do
+  before(:each) do
     @tmp_dir = Dir.mktmpdir("tarchiver-rspec")
     @unpack_path = File.join(@tmp_dir, 'unpacked')
     FileUtils.mkdir_p(@unpack_path)
@@ -208,7 +208,7 @@ describe Tarchiver::Archiver do
     
   end
     
-  after(:all) do
+  after(:each) do
     FileUtils.remove_entry_secure(@tmp_dir)
   end
   
