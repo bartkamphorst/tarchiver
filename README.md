@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/bartkamphorst/tarchiver.svg?branch=master)](https://travis-ci.org/bartkamphorst/tarchiver)
+
 # Tarchiver
 
 A high-level tar and tgz archiver.
