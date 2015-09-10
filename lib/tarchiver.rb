@@ -1,0 +1,7 @@
+require "tarchiver/version"
+require "tarchiver/helpers"
+require "tarchiver/archiver"
+require "tarchiver/tarballer"
+require "tarchiver/compressor"
+require "tarchiver/compressors/gzip"
+require "tarchiver/constants"
