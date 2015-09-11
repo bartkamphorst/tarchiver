@@ -32,6 +32,23 @@ Tarchiver::Archiver.unarchive(archive_path) #outputs output to working directory
 Tarchiver::Archiver.unarchive(archive_path, unpack_path, options)
 ```
 
+### Options
+```ruby
+{
+  delete_input_on_success: false,
+  blocksize: 1024000,
+  verbose: false,
+  content_only: false,
+  relative_to_top_dir: true,
+  custom_archive_name: nil,
+  archive_type: :tgz,
+  compressor: Tarchiver::Gzipper,
+  add_timestamp: false,
+  raise_errors: false
+}
+```
+See Tarchiver::Constants.
+
 ## Contributing
 
 1. Fork it ( https://github.com/bartkamphorst/tarchiver/fork )
