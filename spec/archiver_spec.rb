@@ -17,24 +17,24 @@ describe Tarchiver::Archiver do
     let(:default_options) { Tarchiver::Constants::DEFAULT_ARCHIVE_OPTIONS }
     
     it 'accepts file path input' do
-      _, to_archive = Tarchiver::Helpers.send(:sanitize_input, file_path, default_options)
+      _, _, to_archive = Tarchiver::Helpers.send(:sanitize_input, file_path, default_options)
       expect(to_archive).to eq([file_path])
     end
 
     it 'accepts dir path input' do
-      _, to_archive = Tarchiver::Helpers.send(:sanitize_input, archive_dir, default_options)
+      _, _, to_archive = Tarchiver::Helpers.send(:sanitize_input, archive_dir, default_options)
       expect(to_archive).not_to be_nil
     end
       
     it 'accepts enumerator input' do
       enum = Dir.glob(File.join(archive_dir, '*'))
-      _, to_archive = Tarchiver::Helpers.send(:sanitize_input, enum, default_options)
+      _, _, to_archive = Tarchiver::Helpers.send(:sanitize_input, enum, default_options)
       expect(to_archive).not_to be_nil
     end
     
     it 'adds a timestamp to the archive name' do
       opts = default_options.merge({add_timestamp: true})
-      archive_name, _ = Tarchiver::Helpers.send(:sanitize_input, archive_dir, opts)
+      archive_name, _, _ = Tarchiver::Helpers.send(:sanitize_input, archive_dir, opts)
       expect(archive_name).to match(/test_dir-[0-9]+/)
     end
     
@@ -78,7 +78,7 @@ describe Tarchiver::Archiver do
       end
       
       it 'only includes the contents of a directory' do
-        opts = options.merge({contents_only: true})
+        opts = options.merge({contents_only: true, add_timestamp: true})
         archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, opts)
         expect(inspect_archive(archive_path)).to include(/^homer-excited.png$/)  
       end

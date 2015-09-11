@@ -8,7 +8,7 @@ module Tarchiver
       messages = Tarchiver::Constants::MESSAGES
       # Sanitize input
       options = Tarchiver::Helpers.sanitize_options(Tarchiver::Constants::DEFAULT_ARCHIVE_OPTIONS.merge(opts))
-      archive_name, to_archive = Tarchiver::Helpers.sanitize_input(archive_input, options)
+      archive_name, relative_to, to_archive = Tarchiver::Helpers.sanitize_input(archive_input, options)
 
       return Tarchiver::Helpers.terminate(nil, options) unless archive_name
       archive_path = File.join(output_directory, archive_name)
@@ -17,7 +17,7 @@ module Tarchiver
       puts messages[:start_archiving] if options[:verbose]
       puts messages[:start_tarballing] if options[:verbose]
       Tarchiver::Helpers.prepare_for_tarchiving(archive_path)
-      tar_path = Tarchiver::Tarballer.tar(to_archive, archive_name, output_directory, options)
+      tar_path = Tarchiver::Tarballer.tar(to_archive, archive_name, relative_to, output_directory, options)
       
       # Return on failure
       return Tarchiver::Helpers.terminate(nil, options) unless tar_path

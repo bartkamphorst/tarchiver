@@ -5,16 +5,19 @@ module Tarchiver
       if input.is_a? Enumerable
         archive_name = self.determine_archive_name(input, :enumerable, options)
         to_archive = input
+        relative_to = nil
       elsif File.file?(input)
         archive_name = self.determine_archive_name(input, :file, options)
         to_archive = [input]
+        relative_to = File.basename(input)
       elsif File.directory?(input)
         archive_name = self.determine_archive_name(input, :directory, options)
         to_archive = Dir.glob(File.join(input, '**', '*'), File::FNM_DOTMATCH)
+        relative_to = File.basename(input)
       else
         terminate(ArgumentError.new(Tarchiver::Constants::MESSAGES[:input_not_sane]), options)
       end
-      return archive_name, to_archive
+      return archive_name, relative_to, to_archive
     end
     
     def self.sanitize_options(options)
@@ -30,7 +33,9 @@ module Tarchiver
     end
     
     def self.determine_archive_name(input, input_type, options)
-      return options[:custom_archive_name] if options[:custom_archive_name]
+      if options[:custom_archive_name]
+        return options[:add_timestamp] ? "#{options[:custom_archive_name]}-#{Time.now.to_i}" : options[:custom_archive_name]
+      end
       if input_type == :enumerable
         name = Tarchiver::Constants::DEFAULT_ARCHIVE_NAME
       else
