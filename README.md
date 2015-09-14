@@ -4,7 +4,7 @@
 
 # Tarchiver
 
-A high-level tar and tgz archiver.
+A high-level tar and tgz archiver. Designed for ease of use with acceptable memory footprint (reading and writing in blocks of configurable size).
 
 ## Installation
 
@@ -26,11 +26,13 @@ Or install it yourself as:
 ### Archiving
 ```ruby
 Tarchiver::Archiver.archive(archive_dir) # outputs archive to working directory
+# Returns archive path on success and nil on failure, unless options[:raise_errors] is enabled
 Tarchiver::Archiver.archive(archive_dir, output_dir, options)
 ```
 ### Unarchiving
 ```ruby
-Tarchiver::Archiver.unarchive(archive_path) #outputs output to working directory
+Tarchiver::Archiver.unarchive(archive_path) # outputs output to working directory
+# Returns output path on success and nil on failure, unless options[:raise_errors] is enabled
 Tarchiver::Archiver.unarchive(archive_path, unpack_path, options)
 ```
 
@@ -50,6 +52,13 @@ Tarchiver::Archiver.unarchive(archive_path, unpack_path, options)
 }
 ```
 See Tarchiver::Constants.
+
+### Custom Compressor
+
+1. Subclass Tarchiver::Compressor (MyCompressor < Tarchiver::Compressor)
+2. Implement `compress` and `open` class methods
+3. Set options[:compressor] to MyCompressor
+4. Profit
 
 ## Contributing
 
