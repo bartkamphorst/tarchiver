@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/bartkamphorst/tarchiver.svg?branch=master)](https://travis-ci.org/bartkamphorst/tarchiver)
 [![Coverage Status](https://coveralls.io/repos/bartkamphorst/tarchiver/badge.svg?branch=master&service=github)](https://coveralls.io/github/bartkamphorst/tarchiver?branch=master)
+[![Gem Version](https://badge.fury.io/rb/tarchiver.png)](http://badge.fury.io/rb/tarchiver)
 
 # Tarchiver
 
