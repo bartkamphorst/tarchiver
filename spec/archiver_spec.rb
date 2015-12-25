@@ -3,14 +3,14 @@ require 'spec_helper'
 describe Tarchiver::Archiver do
   
   before(:each) do
-    @tmp_dir = Dir.mktmpdir("tarchiver-rspec")
-    @unpack_path = File.join(@tmp_dir, 'unpacked')
+    @tmp_dir = ::Dir.mktmpdir("tarchiver-rspec")
+    @unpack_path = ::File.join(@tmp_dir, 'unpacked')
     FileUtils.mkdir_p(@unpack_path)
   end
 
-  let(:test_dir_src) {File.join(File.dirname(__FILE__), 'fixtures', 'test_dir')}
-  let(:archive_dir) {FileUtils.cp_r(test_dir_src, @tmp_dir); File.join(@tmp_dir, 'test_dir')}
-  let(:file_path) {File.join(archive_dir, 'deconstructions.txt') }
+  let(:test_dir_src) {::File.join(::File.dirname(__FILE__), 'fixtures', 'test_dir')}
+  let(:archive_dir) {FileUtils.cp_r(test_dir_src, @tmp_dir); ::File.join(@tmp_dir, 'test_dir')}
+  let(:file_path) {::File.join(archive_dir, 'deconstructions.txt') }
    
   context "archiving" do
     
@@ -63,7 +63,7 @@ describe Tarchiver::Archiver do
       
       it 'returns filepath on success' do
         archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, options)
-        expect(archive_path).to eq(File.join(@tmp_dir, 'test_dir.tar'))
+        expect(archive_path).to eq(::File.join(@tmp_dir, 'test_dir.tar'))
       end
       
       it 'only includes the top directory of absolute paths' do
@@ -77,6 +77,19 @@ describe Tarchiver::Archiver do
         expect(inspect_archive(archive_path)).to include(/^.*homer-excited.png$/)  
       end
       
+      it 'only includes the top directory of absolute paths when input is Enumerable' do
+        enum = Dir.glob(File.join(archive_dir, '*')).delete_if{|entry| ! entry.match(/txt$/)}
+        archive_path = Tarchiver::Archiver.archive(enum, @tmp_dir, options)
+        expect(inspect_archive(archive_path)).to include(/^test_dir.+postpatriarchialist.txt$/)  
+      end
+      
+      it 'includes absolute paths when input is Enumerable' do
+        opts = options.merge({relative_to_top_dir: false})
+        enum = Dir.glob(File.join(archive_dir, '*')).delete_if{|entry| ! entry.match(/txt$/)}
+        archive_path = Tarchiver::Archiver.archive(enum, @tmp_dir, opts)
+        expect(inspect_archive(archive_path)).to include(/#{@tmp_dir}.+postpatriarchialist.txt$/)  
+      end
+      
       it 'only includes the contents of a directory' do
         opts = options.merge({contents_only: true, add_timestamp: true})
         archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, opts)
@@ -84,21 +97,21 @@ describe Tarchiver::Archiver do
       end
       
       it 'includes symlinks' do
-        FileUtils.ln_s(File.join(archive_dir, 'materialist.txt'), File.join(archive_dir, 'symlink_to_materialist.txt'))
+        FileUtils.ln_s(::File.join(archive_dir, 'materialist.txt'), File.join(archive_dir, 'symlink_to_materialist.txt'))
         archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, options)
         expect(inspect_archive(archive_path)).to include(/symlink_to_materialist.txt$/)  
-        File.unlink(File.join(archive_dir, 'symlink_to_materialist.txt'))
+        ::File.unlink(::File.join(archive_dir, 'symlink_to_materialist.txt'))
       end
       
       it 'returns nil on failure' do
-        archive_path = Tarchiver::Archiver.archive(File.join(archive_dir, 'nonexistent'), @tmp_dir, options)
+        archive_path = Tarchiver::Archiver.archive(::File.join(archive_dir, 'nonexistent'), @tmp_dir, options)
         expect(archive_path).to be_nil
       end
       
       it 'raises errors if raising is enabled' do
         opts = options.merge({raise_errors: true})
-        expect{ Tarchiver::Archiver.archive(File.join(archive_dir, 'nonexistent'), @tmp_dir, opts) }.to raise_error(ArgumentError)
-        unwritable_dir = File.join(@tmp_dir, 'unwritable')
+        expect{ Tarchiver::Archiver.archive(::File.join(archive_dir, 'nonexistent'), @tmp_dir, opts) }.to raise_error(ArgumentError)
+        unwritable_dir = ::File.join(@tmp_dir, 'unwritable')
         FileUtils.mkdir_p(unwritable_dir, mode: 0600)
         expect{ Tarchiver::Archiver.archive(archive_dir, unwritable_dir, opts) }.to raise_error(Errno::EACCES)
       end
@@ -106,14 +119,14 @@ describe Tarchiver::Archiver do
       it 'has a custom archive name' do
         opts = options.merge({custom_archive_name: 'rspec-archive'})
         archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, opts)
-        expect(archive_path).to eq(File.join(@tmp_dir, 'rspec-archive.tar'))
+        expect(archive_path).to eq(::File.join(@tmp_dir, 'rspec-archive.tar'))
       end
       
       it 'cleans up the input' do
         opts = options.merge({delete_input_on_success: true})
         dir = archive_dir
         archive_path = Tarchiver::Archiver.archive(dir, @tmp_dir, opts)
-        expect(File.exists?(dir)).to be false
+        expect(::File.exists?(dir)).to be false
       end
       
     end
@@ -124,13 +137,13 @@ describe Tarchiver::Archiver do
       
       it 'creates a tgz file' do
         archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, default_options)
-        expect(archive_path).to eq(File.join(@tmp_dir, 'test_dir.tgz'))
+        expect(archive_path).to eq(::File.join(@tmp_dir, 'test_dir.tgz'))
       end
       
       it 'terminates in a controlled way on errors' do
-        expect(default_options[:compressor].send(:compress, File.join(@tmp_dir, 'fake_path'), File.join(@tmp_dir, 'fake_path'), default_options)).to be_nil
+        expect(default_options[:compressor].send(:compress, ::File.join(@tmp_dir, 'fake_path'), ::File.join(@tmp_dir, 'fake_path'), default_options)).to be_nil
         opts = default_options.merge({raise_errors: true})
-        expect{ opts[:compressor].send(:compress, File.join(@tmp_dir, 'fake_path'), File.join(@tmp_dir, 'fake_path'), opts)}.to raise_error(Errno::ENOENT)
+        expect{ opts[:compressor].send(:compress, ::File.join(@tmp_dir, 'fake_path'), ::File.join(@tmp_dir, 'fake_path'), opts)}.to raise_error(Errno::ENOENT)
       end
       
       it 'must use a subclass of Compressor' do
@@ -141,17 +154,17 @@ describe Tarchiver::Archiver do
       
       it 'cleans up the tarball' do
         archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, default_options)
-        tar_path = File.join(File.dirname(archive_path), 'test_dir.tar')
-        expect(File.exists?(tar_path)).to be false
+        tar_path = ::File.join(::File.dirname(archive_path), 'test_dir.tar')
+        expect(::File.exists?(tar_path)).to be false
       end
       
       it 'cleans up everything' do
         opts = default_options.merge({delete_input_on_success: true})
         dir = archive_dir
         archive_path = Tarchiver::Archiver.archive(dir, @tmp_dir, opts)
-        tar_path = File.join(File.dirname(archive_path), 'test_dir.tar')
-        expect(File.exists?(dir)).to be false
-        expect(File.exists?(tar_path)).to be false
+        tar_path = ::File.join(File.dirname(archive_path), 'test_dir.tar')
+        expect(::File.exists?(dir)).to be false
+        expect(::File.exists?(tar_path)).to be false
       end
       
     end
@@ -164,39 +177,38 @@ describe Tarchiver::Archiver do
     
     it 'reads a tgz' do
       archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, default_options)
-      # FileUtils.mkdir_p(unpack_path)
       output = Tarchiver::Archiver.unarchive(archive_path, @unpack_path)
-      expect(Dir.glob(File.join(output, '**', '*')).size).to be(8)
+      expect(Dir.glob(::File.join(output, '**', '*')).size).to be(8)
     end
     
     it 'reads a tar.gz' do
       archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, default_options)
-      tar_gz_path = File.join(File.dirname(archive_path), 'test_dir.tar.gz')
+      tar_gz_path = ::File.join(::File.dirname(archive_path), 'test_dir.tar.gz')
       FileUtils.mv(archive_path, tar_gz_path)
       output = Tarchiver::Archiver.unarchive(tar_gz_path, @unpack_path)
-      expect(Dir.glob(File.join(output, '**', '*')).size).to be(8)
+      expect(Dir.glob(::File.join(output, '**', '*')).size).to be(8)
     end
     
     it 'reads a tar' do
       opts = default_options.merge({archive_type: :tar})
       archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, opts)
       output = Tarchiver::Archiver.unarchive(archive_path, @unpack_path)
-      expect(Dir.glob(File.join(output, '**', '*')).size).to be(8)
+      expect(Dir.glob(::File.join(output, '**', '*')).size).to be(8)
     end
     
     it 'writes symlinks' do
-      FileUtils.ln_s(File.join(archive_dir, 'materialist.txt'), File.join(archive_dir, 'symlink_to_materialist.txt'))
+      FileUtils.ln_s(::File.join(archive_dir, 'materialist.txt'), ::File.join(archive_dir, 'symlink_to_materialist.txt'))
       archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, default_options)
       output = Tarchiver::Archiver.unarchive(archive_path, @unpack_path)
       skip "TarWriter does not support symlinks. They are included as regular files."
-      expect(File.symlink?(File.join(output, 'symlink_to_materialist.txt'))).to be true
+      expect(::File.symlink?(::File.join(output, 'symlink_to_materialist.txt'))).to be true
     end
     
     it 'cleans up the input' do
       opts = default_options.merge({delete_input_on_success: true})
       archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, default_options)
       output = Tarchiver::Archiver.unarchive(archive_path, @unpack_path, opts)
-      expect(File.exist?(archive_path)).to be false
+      expect(::File.exist?(archive_path)).to be false
     end
     
     it 'terminates in a controlled way on errors' do

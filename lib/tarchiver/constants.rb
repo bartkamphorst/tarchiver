@@ -25,6 +25,7 @@ module Tarchiver
       verbose: false,
       content_only: false,
       relative_to_top_dir: true,
+      create_sub_archives: false,
       custom_archive_name: nil,
       archive_type: :tgz,
       compressor: Tarchiver::Gzipper,

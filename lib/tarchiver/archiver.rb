@@ -11,7 +11,7 @@ module Tarchiver
       archive_name, relative_to, to_archive = Tarchiver::Helpers.sanitize_input(archive_input, options)
 
       return Tarchiver::Helpers.terminate(nil, options) unless archive_name
-      archive_path = File.join(output_directory, archive_name)
+      archive_path = ::File.join(output_directory, archive_name)
       
       # Prepare for tarballing
       puts messages[:start_archiving] if options[:verbose]
@@ -43,7 +43,7 @@ module Tarchiver
       puts messages[:completed_archiving] if options[:verbose]
       
       # Return
-      File.exists?(compressed_archive_path) ? compressed_archive_path : Tarchiver::Helpers.terminate(nil, options)
+      ::File.exists?(compressed_archive_path) ? compressed_archive_path : Tarchiver::Helpers.terminate(nil, options)
     end # archive
     
     def self.unarchive(archive, output_directory='.', opts={})
@@ -52,22 +52,22 @@ module Tarchiver
       begin
         io = case archive_type 
         when :tar
-          File.open(archive)
+          ::File.open(archive)
         when :compressed
           options[:compressor].open(archive)
         end
       
       Gem::Package::TarReader.new(io) do |tar|
         tar.each do |entry|
-         dir = File.join(output_directory, File.dirname(entry.full_name))
-         path = File.join(output_directory, entry.full_name)
+         dir = ::File.join(output_directory, ::File.dirname(entry.full_name))
+         path = ::File.join(output_directory, entry.full_name)
          if entry.directory?
            FileUtils.mkdir_p(dir, mode: entry.header.mode, verbose: false)
          elsif entry.header.typeflag == '2' #Symlink!
-            File.symlink(entry.header.linkname, path) 
+            ::File.symlink(entry.header.linkname, path) 
          elsif entry.file?
-           FileUtils.mkdir_p(dir, verbose: false) unless File.directory?(dir)
-           File.open(path, "wb") do |file|
+           FileUtils.mkdir_p(dir, verbose: false) unless ::File.directory?(dir)
+           ::File.open(path, "wb") do |file|
              while buffer = entry.read(options[:blocksize])
                file.write(buffer)
              end
@@ -76,7 +76,7 @@ module Tarchiver
          end
         end
       end
-      File.delete(archive) if File.exists?(archive) && options[:delete_input_on_success]
+      ::File.delete(archive) if ::File.exists?(archive) && options[:delete_input_on_success]
       output_directory
       rescue => error
        puts "#{messages[:failed_archiving]}\n#{error.message}" if options[:verbose]

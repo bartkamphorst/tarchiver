@@ -5,7 +5,7 @@ module Tarchiver
       tgz_path = "#{archive_path}.tgz"
       begin
         Zlib::GzipWriter.open(tgz_path) do |gz|
-          File.open(tar_path, "rb") do |tar|
+          ::File.open(tar_path, "rb") do |tar|
             while buffer = tar.read(options[:blocksize])
               gz.write(buffer)
             end
