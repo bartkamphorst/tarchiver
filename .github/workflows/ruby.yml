@@ -31,11 +31,8 @@ jobs:
     # change this to (see https://github.com/ruby/setup-ruby#versioning):
       uses: ruby/setup-ruby@v1
       with:
+        bundler: 1.17.3
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-    - name: Downgrade bundler
-      run: gem install bundler:1.17.3
-    - name: Lock bundler to older version
-      run: bundle _1.17.3_ lock
     - name: Run tests
       run: bundle exec rake
