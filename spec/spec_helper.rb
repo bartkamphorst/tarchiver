@@ -1,7 +1,7 @@
 require 'simplecov'
 SimpleCov.start
 
-require 'coveralls'
+require 'coveralls_reborn'
 Coveralls.wear!
 
 require 'tarchiver'
