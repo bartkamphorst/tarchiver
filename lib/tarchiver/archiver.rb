@@ -43,7 +43,7 @@ module Tarchiver
       puts messages[:completed_archiving] if options[:verbose]
       
       # Return
-      ::File.exists?(compressed_archive_path) ? compressed_archive_path : Tarchiver::Helpers.terminate(nil, options)
+      ::File.exist?(compressed_archive_path) ? compressed_archive_path : Tarchiver::Helpers.terminate(nil, options)
     end # archive
     
     def self.unarchive(archive, output_directory='.', opts={})
@@ -76,7 +76,7 @@ module Tarchiver
          end
         end
       end
-      ::File.delete(archive) if ::File.exists?(archive) && options[:delete_input_on_success]
+      ::File.delete(archive) if ::File.exist?(archive) && options[:delete_input_on_success]
       output_directory
       rescue => error
        puts "#{messages[:failed_archiving]}\n#{error.message}" if options[:verbose]
