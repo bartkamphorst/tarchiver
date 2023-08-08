@@ -1,6 +1,8 @@
 module Tarchiver
   class Gzipper < Tarchiver::Compressor
   
+    require 'zlib'
+    
     def self.compress(archive_path, tar_path, options)
       tgz_path = "#{archive_path}.tgz"
       begin

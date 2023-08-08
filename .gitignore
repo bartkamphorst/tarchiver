@@ -9,6 +9,9 @@ Gemfile.lock
 /test/tmp/
 /test/version_tmp/
 /tmp/
+lib/.DS_Store
+spec/fixtures/.DS_Store
+spec/fixtures/test_dir/.DS_Store
 
 ## Specific to RubyMotion:
 .dat*
