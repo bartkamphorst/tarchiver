@@ -126,7 +126,7 @@ describe Tarchiver::Archiver do
         opts = options.merge({delete_input_on_success: true})
         dir = archive_dir
         archive_path = Tarchiver::Archiver.archive(dir, @tmp_dir, opts)
-        expect(::File.exists?(dir)).to be false
+        expect(::File.exist?(dir)).to be false
       end
       
     end
@@ -155,7 +155,7 @@ describe Tarchiver::Archiver do
       it 'cleans up the tarball' do
         archive_path = Tarchiver::Archiver.archive(archive_dir, @tmp_dir, default_options)
         tar_path = ::File.join(::File.dirname(archive_path), 'test_dir.tar')
-        expect(::File.exists?(tar_path)).to be false
+        expect(::File.exist?(tar_path)).to be false
       end
       
       it 'cleans up everything' do
@@ -163,8 +163,8 @@ describe Tarchiver::Archiver do
         dir = archive_dir
         archive_path = Tarchiver::Archiver.archive(dir, @tmp_dir, opts)
         tar_path = ::File.join(File.dirname(archive_path), 'test_dir.tar')
-        expect(::File.exists?(dir)).to be false
-        expect(::File.exists?(tar_path)).to be false
+        expect(::File.exist?(dir)).to be false
+        expect(::File.exist?(tar_path)).to be false
       end
       
     end

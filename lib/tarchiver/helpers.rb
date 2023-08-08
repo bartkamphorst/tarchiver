@@ -54,7 +54,7 @@ module Tarchiver
     end
     
     def self.cleanup(archive_input, tar_path, options)
-      ::File.delete(tar_path) if tar_path && ::File.exists?(tar_path)
+      ::File.delete(tar_path) if tar_path && ::File.exist?(tar_path)
       FileUtils.rm_rf(archive_input) if options[:delete_input_on_success]
     end    
     

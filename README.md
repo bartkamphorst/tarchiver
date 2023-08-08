@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/bartkamphorst/tarchiver.svg?branch=master)](https://travis-ci.org/bartkamphorst/tarchiver)
-[![Coverage Status](https://coveralls.io/repos/bartkamphorst/tarchiver/badge.svg?branch=master&service=github)](https://coveralls.io/github/bartkamphorst/tarchiver?branch=master)
+[![Build Status](https://github.com/bartkamphorst/tarchiver/actions/workflows/ruby.yml/badge.svg)](https://github.com/bartkamphorst/tarchiver/actions/workflows/ruby.yml)
+[![Coverage Status](https://coveralls.io/repos/github/bartkamphorst/tarchiver/badge.svg)](https://coveralls.io/github/bartkamphorst/tarchiver)
 [![Gem Version](https://badge.fury.io/rb/tarchiver.png)](http://badge.fury.io/rb/tarchiver)
 
 # Tarchiver
